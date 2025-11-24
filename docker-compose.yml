@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: ml-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - WORKERS=worker1:8000,worker2:8000,worker3:8000
+      - PORT=8080
+    depends_on:
+      - worker1
+      - worker2
+      - worker3
+    networks:
+      - ml-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  worker1:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: ml-worker-1
+    environment:
+      - WORKER_ID=1
+      - CUDA_VISIBLE_DEVICES=-1  # CPU only
+    networks:
+      - ml-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  worker2:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: ml-worker-2
+    environment:
+      - WORKER_ID=2
+      - CUDA_VISIBLE_DEVICES=-1  # CPU only
+    networks:
+      - ml-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  worker3:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: ml-worker-3
+    environment:
+      - WORKER_ID=3
+      - CUDA_VISIBLE_DEVICES=-1  # CPU only
+    networks:
+      - ml-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  ml-network:
+    driver: bridge
