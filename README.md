@@ -1,5 +1,7 @@
 # ML Inference Template
 
+Note: this is prototype version implementing with gai
+
 A production-ready template for deploying machine learning models with **Go Gateway + Python Workers** architecture.
 
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)]()
